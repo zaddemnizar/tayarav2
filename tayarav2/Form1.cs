@@ -57,7 +57,7 @@ namespace tayarav2
             var httpClientHandler = new HttpClientHandler() { UseCookies = false };
             var client = new HttpClient(httpClientHandler);
             client.DefaultRequestHeaders.Add("cookie", File.ReadAllText("ses"));
-            var json=await client.PostAsync()
+            //var json=await client.PostAsync()
         }
     }
 }
