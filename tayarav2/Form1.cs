@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenQA.Selenium.Chrome;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -90,8 +91,11 @@ namespace tayarav2
             var annonce = new AnnonceImmobilier();
             var variables = new Variables();
             var input = new Input();
+            var metadata = new List<Metadata>();
+
             annonce.variables = variables;
             annonce.variables.input = input;
+            annonce.variables.input.metadata = metadata;
 
             //Recherche des différents éléments de l'annonce
             var rowVal = xlWorkSheet.Rows.Find("operationName").Cells.Row;
@@ -111,6 +115,37 @@ namespace tayarav2
 
             rowVal = xlWorkSheet.Rows.Find("subdivisionId").Cells.Row;
             annonce.variables.input.subdivisionId = xlWorkSheet.Cells[rowVal, 2].Text.ToString();
+
+            rowVal = xlWorkSheet.Rows.Find("images").Cells.Row;
+            annonce.variables.input.images = xlWorkSheet.Cells[rowVal, 2].Text.ToString();
+
+            var rowValM = new List<int>();
+            rowValM.Add(xlWorkSheet.Rows.Find("transactionType").Cells.Row);
+            rowValM.Add(xlWorkSheet.Rows.Find("rooms").Cells.Row);
+            rowValM.Add(xlWorkSheet.Rows.Find("bathrooms").Cells.Row);
+            rowValM.Add(xlWorkSheet.Rows.Find("area").Cells.Row);
+
+            for (int i = 0; i < 4; i++)
+            {
+                metadata.Add(new Metadata(xlWorkSheet.Cells[rowValM[i], 1].Text.ToString(), xlWorkSheet.Cells[rowValM[i], 2].Text.ToString(), 0));
+                //metadata.Add(new Metadata(xlWorkSheet.Cells[rowValM[i], 1].Text.ToString(), xlWorkSheet.Cells[rowValM[i], 2].Text.ToString(), Int32.Parse(xlWorkSheet.Cells[rowValM[i], 2].Text)));
+            }
+
+            //rowVal = xlWorkSheet.Rows.Find("transactionType").Cells.Row;
+            //annonce.variables.input.metadata[0].key = xlWorkSheet.Cells[rowVal, 1].Text.ToString();
+            //annonce.variables.input.metadata[0].value = xlWorkSheet.Cells[rowVal, 2].Text.ToString();
+
+            //rowVal = xlWorkSheet.Rows.Find("rooms").Cells.Row;
+            //annonce.variables.input.metadata[1].key = xlWorkSheet.Cells[rowVal, 1].Text.ToString();
+            //annonce.variables.input.metadata[1].numericValue = xlWorkSheet.Cells[rowVal, 2].Text;
+
+            //rowVal = xlWorkSheet.Rows.Find("bathrooms").Cells.Row;
+            //annonce.variables.input.metadata[2].key = xlWorkSheet.Cells[rowVal, 1].Text.ToString();
+            //annonce.variables.input.metadata[2].numericValue = xlWorkSheet.Cells[rowVal, 2].Text;
+
+            //rowVal = xlWorkSheet.Rows.Find("area").Cells.Row;
+            //annonce.variables.input.metadata[3].key = xlWorkSheet.Cells[rowVal, 1].Text.ToString();
+            //annonce.variables.input.metadata[3].numericValue = xlWorkSheet.Cells[rowVal, 2].Text;
 
             return annonce;
         }
