@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using ExcelHelperExe;
+using Newtonsoft.Json;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -17,8 +19,37 @@ namespace tayarav2
             InitializeComponent();
         }
         ChromeDriver _driver;
+        HttpClient client;
         private void Form1_Load(object sender, EventArgs e)
         {
+            var httpClientHandler = new HttpClientHandler()
+            {
+                UseCookies = false,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+            client = new HttpClient(httpClientHandler);
+            client.DefaultRequestHeaders.Add("cookie", File.ReadAllText("ses"));
+
+            var inputs = "c:path".ReadFromExcel<ExcelInput>();
+            var input = inputs.First();
+            var post = new AnnonceImmobilier
+            {
+                operationName = input.operationName,
+                variables = new Variables
+                {
+                    input = new Input
+                    {
+                        category = "",
+                        currency = "",
+                        metadata = new List<Metadata>
+                        {
+                            new Metadata {key="transactionType",value=input.transactionType},
+                            new Metadata {key="rooms",numericValue=input.rooms},
+                        }
+                    }
+                }
+            };
+            inputs.SaveToExcel("path");
 
         }
 
@@ -62,13 +93,6 @@ namespace tayarav2
 
         private async void button3_Click(object sender, EventArgs e)
         {
-            var httpClientHandler = new HttpClientHandler()
-            {
-                UseCookies = false,
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-            };
-            var client = new HttpClient(httpClientHandler);
-
             var annonce = ImportExcel();
             var json = JsonConvert.SerializeObject(annonce);
 
@@ -125,9 +149,16 @@ namespace tayarav2
             rowValM.Add(xlWorkSheet.Rows.Find("bathrooms").Cells.Row);
             rowValM.Add(xlWorkSheet.Rows.Find("area").Cells.Row);
 
+            var meta = new Metadata
+            {
+                key = "",
+                value = "",
+                numericValue = 12
+            };
+
             for (int i = 0; i < 4; i++)
             {
-                metadata.Add(new Metadata(xlWorkSheet.Cells[rowValM[i], 1].Text.ToString(), xlWorkSheet.Cells[rowValM[i], 2].Text.ToString(), 0));
+                //metadata.Add(new Metadata(xlWorkSheet.Cells[rowValM[i], 1].Text.ToString(), xlWorkSheet.Cells[rowValM[i], 2].Text.ToString(), 0));
                 //metadata.Add(new Metadata(xlWorkSheet.Cells[rowValM[i], 1].Text.ToString(), xlWorkSheet.Cells[rowValM[i], 2].Text.ToString(), Int32.Parse(xlWorkSheet.Cells[rowValM[i], 2].Text)));
             }
 
