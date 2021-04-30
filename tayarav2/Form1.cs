@@ -30,8 +30,11 @@ namespace tayarav2
             client = new HttpClient(httpClientHandler);
             client.DefaultRequestHeaders.Add("cookie", File.ReadAllText("ses"));
 
+            //using ExcelHelperEx librairie
             var inputs = "c:path".ReadFromExcel<ExcelInput>();
             var input = inputs.First();
+
+            //initialising class AnnonceImmobilier
             var post = new AnnonceImmobilier
             {
                 operationName = input.operationName,
@@ -97,7 +100,7 @@ namespace tayarav2
             var json = JsonConvert.SerializeObject(annonce);
 
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var post = await client.PostAsync("https://www.tayara.tn/graphq1", stringContent);
+            var post = await client.PostAsync("https://www.tayara.tn/graphql", stringContent);
         }
 
         private static AnnonceImmobilier ImportExcel()
