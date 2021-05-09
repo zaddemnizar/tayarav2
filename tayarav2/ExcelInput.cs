@@ -10,10 +10,11 @@
         public string subdivisionId { get; set; }
         public string transactionType { get; set; }
         public int rooms { get; set; }
-        public string bathrooms { get; set; }
-        public string area { get; set; }
-
+        public int bathrooms { get; set; }
+        public int area { get; set; }
         public string images { get; set; }
 
     }
+
+
 }

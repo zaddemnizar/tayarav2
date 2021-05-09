@@ -7,12 +7,6 @@ namespace tayarav2
         public string key { get; set; }
         public string value { get; set; }
         public int? numericValue { get; set; }
-        //public Metadata(string Key, string Value, int NumericValue)
-        //{
-        //    key = Key;
-        //    value = Value;
-        //    numericValue = NumericValue;
-        //}
     }
 
     public class Input
@@ -20,11 +14,11 @@ namespace tayarav2
         public string title { get; set; }
         public string description { get; set; }
         public string price { get; set; }
-        public string currency { get; set; } = "TND";
+        public string currency { get; set; }
         public string images { get; set; }
-        public string sector { get; set; } = "";
+        public string sector { get; set; }
         public string category { get; set; }
-        public string subdivisionId { get; set; }
+        public string subdivisionId { get; set; } = "TN_335653";
         public List<Metadata> metadata { get; set; } = new List<Metadata>();
     }
     public class Variables
